@@ -164,12 +164,11 @@ const loadData = (elements) =>{
     
     const parentContainer = document.getElementById('img-container');
     for( const element of elements){
-        console.log(element)
         const div = document.createElement('div');
-        div.classList.add('col-md-3','my-2');
+        div.classList.add('col-md-3','my-3');
         div.innerHTML = `
         <div class="card" style="width: 18rem;">
-            <img src="${element.thumbnailUrl}" class="card-img-top" alt="...">
+            <img src="${element.thumbnailUrl}" class="card-img-top" alt="..." onclick="showDetailsData('${element.id}')">
             <div class="card-body">
             <p class="card-text">${element.title}</p>
             </div>
@@ -177,6 +176,46 @@ const loadData = (elements) =>{
         `;
         parentContainer.appendChild(div)
     }
+}
+
+// ৮. প্রত্যেকটা ফটোতে ক্লিক করলে উপরে আরেকটা div থাকবে। ক্লিক করার পর ডাইনামিকভাবে ওই ফটো এর ডাটা লোড করবে। সেটা করার জন্য আগের ডাটা লোড করার API এর লিংক এর পরে photos এর পরে ডাইনামিকভাবে /{id} বসিয়ে দিবে। এরপর ডিটেইল অংশে photo এর url দিয়ে মেইন ইমেজ এবং thumbnail ইমেজ দুইটাই দেখাবে। সাথে সাথে title প্রপার্টিও দেখাবে। 
+
+const showDetailsData = ( details ) =>{
+    const url = `https://jsonplaceholder.typicode.com/photos/${details}`;
+    fetch(url)
+    .then( res => res.json())
+    .then( data => showDetails(data))
+    
+
+};
+
+
+const showDetails = data =>{
+    // console.log(data)  //url title thumbnailUrl
+    const detailsContainer = document.getElementById('details-container');
+    detailsContainer.innerHTML = '';
+    window.scrollTo( 0, 40)
+    const div = document.createElement('div');
+    div.classList.add('row');
+    div.innerHTML = `
+        <div class="card mb-3 col-md-7 me-2">
+            <img src="${data.url}" class="card-img-top" alt="..." height="150px">
+        </div>
+        <div class="card mb-3 col-md-5" style="max-width: 540px;">
+            <div class="row g-0">
+            <div class="col-md-4">
+                <img src="${data.thumbnailUrl}" class="img-fluid rounded-start" alt="...">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                <h5 class="card-title">${data.title}</h5>
+                </div>
+            </div>
+            </div>
+        </div>                                                  
+    `;
+    detailsContainer.appendChild(div);
+
 }
 
 
